@@ -1,3 +1,10 @@
+// --== CS400 Spring 2023 File Header Information ==--
+// Name: Alan Liang
+// Email: aliang26@wisc.edu
+// Team: CI
+// TA: Karan Grover
+// Lecturer: Florian Heimerl
+// Notes to Grader: <optional extra notes>
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -24,9 +31,11 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
     // node type's data field.
     @SuppressWarnings("unchecked")
     public Node<T>[] context = (Node<T>[]) new Node[3];
-
+    public int blackHeight; // tracks the black height of the current node (not the full tree)
+                                // 0 = red, 1 = black, 2 = double black
     public Node(T data) {
       this.data = data;
+      blackHeight = 0; // insert red nodes only
     }
 
     /**
@@ -62,6 +71,7 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
       // add first node to an empty tree
       root = newNode;
       size++;
+      enforeRedBlackPropertiesAfterInsert(newNode);
       return true;
     } else {
       // insert into subtree
@@ -78,6 +88,7 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
             current.context[1] = newNode;
             newNode.context[0] = current;
             this.size++;
+            enforeRedBlackPropertiesAfterInsert(newNode);
             return true;
           } else {
             // no empty space, keep moving down the tree
@@ -90,6 +101,7 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
             current.context[2] = newNode;
             newNode.context[0] = current;
             this.size++;
+            enforeRedBlackPropertiesAfterInsert(newNode);
             return true;
           } else {
             // no empty space, keep moving down the tree
@@ -401,19 +413,82 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
     return "level order: " + this.toLevelOrderString() + "\nin order: " + this.toInOrderString();
   }
 
+  /**
+   * This method will check the red-black properties of the tree after insertion. If any of the properties are
+   * violated, resolve them.
+   * @param node the red node that was inserted
+   */
+  protected void enforeRedBlackPropertiesAfterInsert(Node<T> node) {
+    // If the node being checked it the root, make the node black and end the code
+    if (root == node) {
+      node.blackHeight = 1;
+      return; // exit code
+    }
+    Node<T> nullNode = new Node<T>(null);
+    nullNode.blackHeight = 1; // Null nodes are black
+    Node<T> child = node;
+    Node<T> parent = child.context[0];
+    Node<T> grandparent = parent.context[0];
+    Node<T> aunt = nullNode;
+    if (parent.blackHeight == 1) { // if the parent is black, there is no violation
+      return;
+    }
+    if (grandparent == null) {
+      return; // no violation is possible from adding a red node to a tree with only (1) a root or 
+              // (2) a root and a child at the opposite end of the tree
+    }
+    if (parent.isRightChild() && grandparent.context[1] != null) {
+      aunt = grandparent.context[1];
+    }
+    else if (!parent.isRightChild() && grandparent.context[2] != null){
+      aunt = grandparent.context[2];
+    }
+    
+    // red-red violation w/ black aunt
+    if (aunt.blackHeight == 1) {
+      // 1. Rotate
+      // Align child, parent, grandparent in a line
+      if (!parent.isRightChild() && child.isRightChild()) {
+        rotate(child, parent);
+        // swap the child + parent references so that the previous child is now the parent and 
+        // the previous parent is now the child
+        Node<T> temp = child;
+        child = parent;
+        parent = temp;
+      }
+      // Align child, parent, grandparent in a line (mirror configuration)
+      if (parent.isRightChild() && !child.isRightChild()) {
 
-  // Implement at least 3 boolean test methods by using the method signatures below,
-  // removing the comments around them and addind your testing code to them. You can
-  // use your notes from lecture for ideas on concrete examples of rotation to test for.
-  // Make sure to include rotations within and at the root of a tree in your test cases.
-  // Give each of the methods a meaningful header comment that describes what is being
-  // tested and make sure your test hafe inline comments to help developers read through them.
-  // If you are adding additional tests, then name the method similar to the ones given below.
-  // Eg: public static boolean test4() {}
-  // Do not change the method name or return type of the existing tests.
-  // You can run your tests by commenting in the calls to the test methods
+        rotate(child, parent);
+        // swap the child + parent references so that the previous child is now the
+        // parent and
+        // the previous parent is now the child
+        Node<T> temp = child;
+        child = parent;
+        parent = temp;
+      }
+      // After alignment, rotate the parent and grandparent
+      rotate(parent, grandparent);
 
- 
+      // 2. Colorswap
+      parent.blackHeight = 1;
+      grandparent.blackHeight = 0;
+      // check root if root is still black; if not make it black
+      if (root.blackHeight == 0) {
+        root.blackHeight = 1;
+      }
+    }
+    // red-red  violation w/ red aunt
+    else if (aunt.blackHeight == 0) {
+      // recolor
+      parent.blackHeight = 1; 
+      grandparent.blackHeight = 0;
+      aunt.blackHeight = 1;
+      // check upwards
+      enforeRedBlackPropertiesAfterInsert(grandparent);
+    }
+    root.blackHeight = 1; // set root to black because it should always be black
+  }
 
   /**
    * Main method to run tests. Comment out the lines for each test to run them.
@@ -421,6 +496,15 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
    * @param args
    */
   public static void main(String[] args) {
+    RedBlackTree<Character> tree = new RedBlackTree<>();
+    tree.insert('F');
+    tree.insert('C');
+    tree.insert('B');
+    tree.insert('A');
+    tree.insert('H');
+    tree.insert('I');
+    tree.insert('O');
+    System.out.println(tree.toLevelOrderString());
   }
 
 }

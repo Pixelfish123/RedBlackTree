@@ -5,8 +5,13 @@
 // TA: Karan Grover
 // Lecturer: Florian Heimerl
 // Notes to Grader: <optional extra notes>
+
 import java.util.LinkedList;
 import java.util.Stack;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Red-Black Tree implementation with a Node inner class for representing the nodes of the tree.
@@ -496,15 +501,69 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
    * @param args
    */
   public static void main(String[] args) {
+    // blank
+  }
+
+  @Test
+  /**
+   * Tests the root to be black and adding three increasingly large values and
+   * checking
+   * for rotation when there is a null (black) aunt but the red nodes are aligned.
+   * 
+   * Checks the state of the tree using toLevelOrderString() and the color of the
+   * root
+   */
+  void test1() {
     RedBlackTree<Character> tree = new RedBlackTree<>();
-    tree.insert('F');
-    tree.insert('C');
     tree.insert('B');
-    tree.insert('A');
-    tree.insert('H');
-    tree.insert('I');
-    tree.insert('O');
-    System.out.println(tree.toLevelOrderString());
+    tree.insert('C');
+    tree.insert('D');
+    assertEquals("[ C, B, D ]", tree.toLevelOrderString()); // ensures that the tree is in the right order
+    assertEquals(tree.findNodeWithData('C').blackHeight, 1); // ensures that the root is black
+  }
+
+  @Test
+  /**
+   * Tests recolor operation when a red node is added with a red aunt
+   * 
+   * Checks the state of the tree using toLevelOrderString() and the color of the
+   * nodes
+   * 
+   */
+  void test2() {
+    RedBlackTree<Integer> tree = new RedBlackTree<>();
+    tree.insert(2);
+    tree.insert(1);
+    tree.insert(3);
+    tree.insert(4);
+    assertEquals(tree.findNodeWithData(4).blackHeight, 0); // ensures that the new node stays red
+    assertEquals(tree.findNodeWithData(2).blackHeight, 1); // ensures that the root is recolored to black
+                                                           // after recolored to red since it is the root
+    assertEquals(tree.findNodeWithData(1).blackHeight, 1); // ensures that this node becomes black
+    assertEquals(tree.findNodeWithData(3).blackHeight, 1); // ensures that this node becomes black
+    assertEquals("[ 2, 1, 3, 4 ]", tree.toLevelOrderString()); // ensures that the tree is in the right order
+
+  }
+
+  @Test
+  /**
+   * tests the rotation operation when a red node is added with a black aunt and
+   * the red nodes are not aligned
+   * 
+   * Checks the state of the tree using toLevelOrderString() and the color of
+   * the nodes
+   * 
+   */
+  void test3() {
+    RedBlackTree<Integer> tree = new RedBlackTree<>();
+    tree.insert(50);
+    tree.insert(35); // Left of 50
+    tree.insert(40); // will be on the right of 35
+    assertEquals(tree.findNodeWithData(40).blackHeight, 1); // ensures that 40 is black (root)
+    assertEquals(tree.findNodeWithData(50).blackHeight, 0); // ensures that 50 is red
+    assertEquals(tree.findNodeWithData(35).blackHeight, 0); // ensures that 35 is red
+    assertEquals("[ 40, 35, 50 ]", tree.toLevelOrderString()); // ensures that the tree is in the right order
+
   }
 
 }

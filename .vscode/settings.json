@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\alanl\\OneDrive\\Documents\\GitHub\\UW-Madison-CS\\junit5.jar"
+    ]
+}

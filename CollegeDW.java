@@ -23,12 +23,12 @@ public class CollegeDW implements CollegeInterface {
 
     @Override
     public String getInState() {
-        return instate;
+        return "$" + instate;
     }
 
     @Override
     public String getOutState() {
-        return outstate;
+        return "$"+ outstate;
     }
 
     public String toString() {

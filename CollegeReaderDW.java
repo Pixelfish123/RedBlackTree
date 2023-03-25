@@ -5,22 +5,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CollegeReaderDW implements CollegeReaderInterface {
-    private List<CollegeInterface> colleges;
-
-    public CollegeReaderDW() {
-        colleges = new ArrayList<CollegeInterface>();
-    }
 
     @Override
     public List<CollegeInterface> readCollegesFromFile(String filename) throws FileNotFoundException {
-        Scanner file = new Scanner(new File(filename));
-        while (file.hasNextLine()) {
-            String line = file.nextLine();
+        // will contain name, state, instate Total, outstate Total
+        ArrayList<CollegeInterface> colleges = new ArrayList<CollegeInterface>();
+        Scanner scan = new Scanner(new File(filename));
+        while (scan.hasNextLine()) {
+            String line = scan.nextLine();
             String[] parts = line.split(",");
-            CollegeInterface college = new CollegeDW(parts[0], parts[1], Integer.parseInt(parts[2]),
-                    Integer.parseInt(parts[3]));
+            CollegeInterface college = new CollegeDW(parts[0], parts[1], Integer.parseInt(parts[8]),
+                    Integer.parseInt(parts[10]));
             colleges.add(college);
         }
+        scan.close();
         return colleges;
     }
 }

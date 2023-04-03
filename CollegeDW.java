@@ -1,3 +1,14 @@
+// --== CS400 Spring 2023 File Header Information ==--
+// Name: Alan Liang
+// Email: aliang26@wisc.edu
+// Team: CI
+// TA: Karan Grover
+// Lecturer: Florian Heimerl
+// Notes to Grader: <optional extra notes>
+
+/**
+ * This class represents a college and implements the CollegeInterface.
+ */
 public class CollegeDW implements CollegeInterface {
     private String name;
     private String state;
@@ -22,16 +33,16 @@ public class CollegeDW implements CollegeInterface {
     }
 
     @Override
-    public String getInState() {
-        return "$" + instate;
+    public int getInState() {
+        return instate;
     }
 
     @Override
-    public String getOutState() {
-        return "$"+ outstate;
+    public int getOutState() {
+        return outstate;
     }
 
     public String toString() {
-        return name + " " + state + " " + instate + " " + outstate;
+        return name + "\nState: " + state + "\nInstate cost: $" + instate + "\nOutstate cost: $" + outstate;
     }
 }

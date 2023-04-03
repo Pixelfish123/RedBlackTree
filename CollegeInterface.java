@@ -5,7 +5,7 @@ public interface CollegeInterface {
 
     public String getName();
 
-    public String getInState();
+    public int getInState();
 
-    public String getOutState();
+    public int getOutState();
 }

@@ -9,6 +9,7 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
@@ -112,4 +113,89 @@ public class DataWranglerTests {
         assertEquals(college.toString(),
                 "University of Wisconsin-Madison\nState: Wisconsin\nInstate cost: $10000\nOutstate cost: $20000");
     }
+
+    @Test
+    /**
+     * INTEGRATION TEST: Tests the functionaility of the AE's EnhancedRedBlackTree
+     * of CollegeDW objects
+     */
+    void test6() {
+        EnhancedRedBlackTreeAE<CollegeInterface> tree = new EnhancedRedBlackTreeAE<CollegeInterface>();
+
+        CollegeDW college1 = new CollegeDW("University of Wisconsin-Madison", "Wisconsin", 10000, 20000);
+        CollegeDW college2 = new CollegeDW("University of Wisconsin-Milwaukee", "Wisconsin", 5000, 10000);
+        tree.insert(college1);
+        tree.insert(college2);
+        assertEquals(tree.size(), 2);
+        assertEquals(tree.getLast(2)[0].getName(), "University of Wisconsin-Madison");
+        assertEquals(tree.getLast(2)[1].getName(), "University of Wisconsin-Milwaukee");
+
+    }
+
+    @Test
+    /**
+     * INTEGRATION TEST: Tests FD's CollegeSearchFrontend commandLoop with DW's
+     * readCollegesFromFile
+     */
+    void test7() {
+        TextUITester uiTester = new TextUITester("L\ntest.csv\nB\n1\nQ\n"); // sequence of user input
+        try (Scanner scnr = new Scanner(System.in)) {
+            EnhancedRedBlackTreeAE<CollegeInterface> rbt = new EnhancedRedBlackTreeAE<CollegeInterface>();
+            CollegeReaderInterface reader = new CollegeReaderDW();
+            CollegeSearchBackendBD backend = new CollegeSearchBackendBD(rbt, reader);
+            CollegeSearchFrontendFD frontend = new CollegeSearchFrontendFD(scnr, backend);
+            frontend.runCommandLoop();
+            String systemOutput = uiTester.checkOutput();
+            assertEquals("//////////////////////////////////////////////////////////////////////\n" +
+                    "Welcome to the College Finder App.\n" +
+                    "//////////////////////////////////////////////////////////////////////\n" +
+                    "Choose a command from the list below:\n" +
+                    "	[L]oad data from file\n" +
+                    "	Display [T]op most expensive\n" +
+                    "	Display [B]ottom least expensive\n" +
+                    "	Enter [P]rice Range\n" +
+                    "	[Q]uit\n" +
+                    "Choose command: \n" +
+                    "Enter the name of the file to load: \n" +
+                    "Choose a command from the list below:\n" +
+                    "	[L]oad data from file\n" +
+                    "	Display [T]op most expensive\n" +
+                    "	Display [B]ottom least expensive\n" +
+                    "	Enter [P]rice Range\n" +
+                    "	[Q]uit\n" +
+                    "Choose command: \n" +
+                    "Enter how many options you want to see: \n" +
+                    "Choose a command from the list below:\n" +
+                    "	[L]oad data from file\n" +
+                    "	Display [T]op most expensive\n" +
+                    "	Display [B]ottom least expensive\n" +
+                    "	Enter [P]rice Range\n" +
+                    "	[Q]uit\n" +
+                    "Choose command: \n" +
+                    "[1] Trident University International\n" +
+                    "//////////////////////////////////////////////////////////////////////\n" +
+                    "Thank you for using the College Finder App.\n" +
+                    "//////////////////////////////////////////////////////////////////////\n",
+                    systemOutput);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    /**
+     * INTEGRATION TEST
+     */
+    void test8() {
+
+    }
+
+    @Test
+    /**
+     * INTEGRATION TEST
+     */
+    void test9() {
+
+    }
+
 }

@@ -73,7 +73,7 @@ public class CollegeSearchBackendBD implements CollegeSearchBackendInterface {
 
 	@Override
 	public void addCollegeToTree(CollegeInterface college) {
-		rbt.insert((College) college);
+		rbt.insert(college);
 		collegeCount++;
 	}
 

@@ -1,3 +1,5 @@
+// import javax.lang.model.util.ElementScanner14;
+
 // --== CS400 Spring 2023 File Header Information ==--
 // Name: Alan Liang
 // Email: aliang26@wisc.edu
@@ -45,4 +47,33 @@ public class CollegeDW implements CollegeInterface {
     public String toString() {
         return name + "\nState: " + state + "\nInstate cost: $" + instate + "\nOutstate cost: $" + outstate;
     }
+
+    @Override
+    public int compareTo(CollegeInterface o) {
+        if (this.outstate < o.getOutState())
+            return -1;
+        else if (this.outstate > o.getOutState())
+            return 1;
+        else if (this.outstate == o.getOutState()) {
+            return this.name.compareTo(o.getState());
+        } else
+            return 0;
+    }
+
+    @Override
+    public int compareTo(CollegeInterface o, boolean instate) {
+        if (instate) {
+            if (this.instate < o.getInState())
+                return -1;
+            else if (this.instate > o.getInState())
+                return 1;
+            else if (this.instate == o.getInState()) {
+                return this.name.compareTo(o.getState());
+            } else
+                return 0;
+        } else {
+            return compareTo(o);
+        }
+    }
+
 }

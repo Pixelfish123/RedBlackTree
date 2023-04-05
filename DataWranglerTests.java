@@ -50,7 +50,7 @@ public class DataWranglerTests {
 
         try {
             collegeList = reader.readCollegesFromFile(
-                    currentDir + "/test.csv"); // fails on my computer but works in PuTTy so...
+                    currentDir + "/test.csv");
         } catch (FileNotFoundException fne) {
             fail("this exists but exception was still thrown");
         }
@@ -90,10 +90,9 @@ public class DataWranglerTests {
         expectedColleges.add(new CollegeDW("University of Hawaii at Hilo", "Hawaii", 19126, 32086));
 
         try {
-            collegeList = reader.readCollegesFromFile(currentDir + "/testBlank.csv"); // fails on my computer but works
-                                                                                      // in PuTTy so...
+            collegeList = reader.readCollegesFromFile(currentDir + "/testBlank.csv");
         } catch (FileNotFoundException fne) {
-            fail("this exists but exception was still thrown");
+               fail("this exists but exception was still thrown");
         }
         for (int i = 0; i < expectedColleges.size(); i++) {
             assertEquals(expectedColleges.get(i).getName(), collegeList.get(i).getName());
